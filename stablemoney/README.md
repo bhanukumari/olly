@@ -16,7 +16,7 @@ Observability helps understand system behavior via logs, metrics, and traces. It
 
 ![image](https://github.com/user-attachments/assets/4c70e593-bd6b-4973-aa78-c2458fc32be0)
 
-![alt text](image-4.png)
+![image](https://github.com/user-attachments/assets/1aa4c283-432e-468c-8c74-810adecdba48)
 
 ## Tools Used in Observability Setup
 
@@ -47,7 +47,7 @@ cd VictoriaMetrics
 
 ## Open the Makefile and Execute Commands
 
-![alt text](image-5.png)
+![image](https://github.com/user-attachments/assets/a4f8fd81-0428-4058-a0e3-d60b0a6c9e94)
 
 ## Verification
 - Switch to the Monitoring Namespace
@@ -62,8 +62,9 @@ kubectl get all -n monitoring
 This ensures the successful creation of all required resources in the monitoring namespace.
 
 ## Expected output:
-![alt text](image-6.png)
-![alt text](image-7.png)
+![image](https://github.com/user-attachments/assets/a3707274-54e9-4ac9-88c5-b41a08a41768)
+
+![image](https://github.com/user-attachments/assets/7a0e7a96-05cb-4825-8850-d762a2eeaab4)
 
 2 .  **Logging Setup (Loki)**
 
@@ -71,7 +72,7 @@ Navigate to the Logging Folder
 
 **Open the Makefile and Execute Commands**
 
-![alt text](image-8.png)
+![image](https://github.com/user-attachments/assets/9956e9ce-7a76-4a2a-bf33-55a5e06d8092)
 
 ## Verification:
 
@@ -87,7 +88,7 @@ kubectl get all -n logging
 
 ## Expected Output
 
-![alt text](image-9.png)
+![image](https://github.com/user-attachments/assets/9956e9ce-7a76-4a2a-bf33-55a5e06d8092)
 
 3 . **OpenTelemetry (OTel) Setup**
 
@@ -95,7 +96,7 @@ Navigate to OpenTelemetry Folder
 
 **Open the Makefile and Execute Commands**
 
-![alt text](image-10.png)
+![image](https://github.com/user-attachments/assets/92afe816-f7b0-4481-8228-de4197926879)
 
 ## Verification:
 
@@ -109,7 +110,7 @@ kubectl get all -n observability
 
 ## Expected Output
 
-![alt text](image-11.png)
+![image](https://github.com/user-attachments/assets/65b4d157-d612-4061-89b4-0f4151660368)
 
 
 4 . **Tempo Setup**
@@ -118,7 +119,8 @@ Navigate to Tempo Folder
 
 **Open the Makefile and Execute Commands**
 
-![alt text](image-12.png)
+![image](https://github.com/user-attachments/assets/9542f344-5c8d-4bb0-b5a9-1183c7576704)
+
 
 ## Verification:
 
@@ -131,7 +133,7 @@ kubectl get all -n observability
 ```
 ## Expected Output
 
-![alt text](image-13.png)
+![image](https://github.com/user-attachments/assets/a860713c-92c7-4d58-94d4-7dcd972e41f9)
 
 
 
