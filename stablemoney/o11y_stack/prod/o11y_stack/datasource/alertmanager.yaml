@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vm-alertmanager-datasource
+  namespace: monitoring
+  labels:
+    grafana_datasource: "1"
+    app: victoriametrics-grafana
+data:
+  vm-alertmanager.yaml: |-
+    apiVersion: 1
+    datasources:
+      - name: "vm-alertmanager"
+        type: alertmanager
+        uid: alertmanager
+        url: http://vmalertmanager-vm.monitoring.svc:9093/
+        access: proxy
+        jsonData:
+          handleGrafanaManagedAlerts: false
+          implementation: prometheus

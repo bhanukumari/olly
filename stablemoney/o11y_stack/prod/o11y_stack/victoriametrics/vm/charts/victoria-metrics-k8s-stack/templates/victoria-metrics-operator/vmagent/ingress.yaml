@@ -1,0 +1,47 @@
+{{- $global := (dict "Values" (deepCopy .Values) "Release" (deepCopy .Release) "Chart" (deepCopy .Chart) "Template" (deepCopy .Template)) -}}
+{{- $app := .Values.vmagent }}
+{{- if and $app.enabled $app.ingress.enabled -}}
+{{- $serviceName := printf "%s-%s" "vmagent" (include "victoria-metrics-k8s-stack.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- $servicePort := $app.spec.port | default 8429 }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $app.name | default $serviceName }}
+  namespace: {{ .Release.Namespace }}
+  {{- $extraLabels := dict "app.kubernetes.io/component" (printf "%s-vmagent" (include "victoria-metrics-k8s-stack.name" .)) }}
+  {{- $ctx := merge (deepCopy $global) (dict "extraLabels" (merge $extraLabels $app.ingress.labels)) }}
+  labels: {{ include "victoria-metrics-k8s-stack.labels" $ctx | nindent 4 }}
+  {{- with $app.ingress.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with $app.ingress.ingressClassName }}
+  ingressClassName: {{ . }}
+  {{- end }}
+  {{- with $app.ingress.tls }}
+  tls: {{ tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+  rules:
+    {{- $hosts := $app.ingress.hosts | default (list "") }}
+    {{- range $hosts }}
+    - http:
+        paths:
+         {{- with $app.ingress.extraPaths }}
+         {{- toYaml  | nindent 10 }}
+         {{- end }}
+          - backend:
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+            {{- with $app.ingress.path }}
+            path: {{ . }}
+            {{- end }}
+            {{- with $app.ingress.pathType }}
+            pathType: {{ . }}
+            {{- end }}
+      {{- with . }}
+      host: {{ tpl . $ }}
+      {{- end }}
+    {{- end }}
+{{- end }}

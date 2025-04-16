@@ -1,0 +1,53 @@
+# apiVersion: operator.victoriametrics.com/v1beta1
+# kind: VMAlertmanagerConfig
+# metadata:
+#   name: infra-alert
+#   namespace: monitoring
+# spec:
+#   route:
+#     group_wait: 30s
+#     group_interval: 1m
+#     repeat_interval: 30m
+#     receiver: slack-prod
+#     group_by:
+#       - job
+#       - alertname
+#       - severity
+#     routes:
+#       - receiver: slack-prod
+#         group_wait: 10s
+#         continue: true
+#         matchers:
+#           - severity =~ "warning|critical"
+#           - channel = slack
+#           - team = devops
+#   receivers:
+#     - name: slack-prod
+#       slack_configs:
+#         - channel: "#011y"
+#           # Slack webhook should secured in the k8d secrets
+#           # Webhook should secure in the aws secrets manager or azure vault
+#           api_url:
+#             name:  slack-webhook-secret
+#             key: infra_slack_alert_url
+#           send_resolved: true
+#           title: '{{ template "slack.monzo.title" . }}'
+#           icon_emoji: '{{ template "slack.monzo.icon_emoji" . }}'
+#           color: '{{ template "slack.monzo.color" . }}'
+#           text: '{{ template "slack.monzo.text" . }}'
+#           actions:
+#             - type: button
+#               text: "Runbook :green_book:"
+#               url: "{{ (index .Alerts 0).Annotations.runbook }}"
+#             - type: button
+#               text: "Query :mag:"
+#               url: "{{ (index .Alerts 0).GeneratorURL }}"
+#             - type: button
+#               text: "Dashboard :grafana:"
+#               url: "{{ (index .Alerts 0).Annotations.dashboard }}"
+#             - type: button
+#               text: "Silence :no_bell:"
+#               url: '{{ template "__alert_silence_link" . }}'
+#             - type: button
+#               text: '{{ template "slack.monzo.link_button_text" . }}'
+#               url: "{{ .CommonAnnotations.link_url }}"

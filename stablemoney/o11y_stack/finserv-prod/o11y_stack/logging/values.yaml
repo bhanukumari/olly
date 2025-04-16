@@ -1,0 +1,66 @@
+standalone:
+  loki:
+    limits_config:
+      retention_period: 365d
+    compactor:
+      working_directory: /var/loki/compactor
+      compaction_interval: 10m
+      retention_enabled: true
+      delete_request_store: filesystem
+      retention_delete_delay: 2h
+  singleBinary:
+    persistence:
+      enableStatefulSetAutoDeletePVC: true
+      storageClass: buildpiper-storage
+      size: 100Gi
+    nodeSelector:
+      node_group: monitoring
+    tolerations:
+      - key: o11y
+        operator: Equal
+        value: "true"
+        effect: NoSchedule
+  gateway:
+    nodeSelector:
+      node_group: monitoring
+    tolerations:
+      - key: o11y
+        operator: Equal
+        value: "true"
+        effect: NoSchedule
+  resultsCache:
+    nodeSelector:
+      node_group: monitoring
+    tolerations:
+      - key: o11y
+        operator: Equal
+        value: "true"
+        effect: NoSchedule
+  chunksCache:
+    nodeSelector:
+      node_group: monitoring
+    tolerations:
+      - key: o11y
+        operator: Equal
+        value: "true"
+        effect: NoSchedule
+
+promtail:
+  config:
+    logLevel: info
+    clients:
+      - url: http://logging-loki-gateway.logging.svc.cluster.local/loki/api/v1/push
+
+  resources:
+    limits:
+      cpu: 250m
+      memory: 250Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  
+  nodeSelector:
+    kubernetes.io/os: linux
+  tolerations:
+    - effect: NoSchedule
+      operator: Exists

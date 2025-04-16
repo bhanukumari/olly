@@ -1,0 +1,116 @@
+{{- if .Values.admissionWebhooks.enabled }}
+{{- $tls := fromYaml (include "vm-operator.certs" .) }}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name:  {{ include "vm-operator.fullname" . }}-admission
+  {{- if .Values.admissionWebhooks.certManager.enabled }}
+  annotations:
+    certmanager.k8s.io/inject-ca-from: {{ printf "%s/%s-validation" .Release.Namespace ( include "vm-operator.fullname" .) | quote }}
+    cert-manager.io/inject-ca-from: {{ printf "%s/%s-validation" .Release.Namespace (include "vm-operator.fullname" .) | quote }}
+  {{- end }}
+  {{- $ctx := merge (deepCopy .) (dict "extraLabels" .Values.extraLabels) }}
+  labels: {{ include "vm-operator.labels" $ctx | nindent 4 }}
+webhooks:
+{{- range $name, $enabled := .Values.admissionWebhooks.enabledCRDValidation }}
+{{- if $enabled }}
+  - clientConfig:
+      service:
+        namespace: {{ $.Release.Namespace }}
+        name: {{ include "vm-operator.fullname" $ }}
+        path: /validate-operator-victoriametrics-com-v1beta1-{{ $name }}
+      {{- if not $.Values.admissionWebhooks.certManager.enabled }}
+      caBundle: {{ $tls.caCert }}
+      {{- end }}
+    failurePolicy: {{ $.Values.admissionWebhooks.policy }}
+    name: {{ $name }}.victoriametrics.com
+    admissionReviewVersions: ["v1", "v1beta1"]
+    sideEffects: None
+    objectSelector:
+      matchExpressions:
+        - key: app.kubernetes.io/name
+          operator: NotIn
+          values: [{{ include "vm-operator.name" $ }}]
+    rules:
+      - apiGroups:
+          - operator.victoriametrics.com
+        apiVersions:
+          - v1beta1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - {{ $name }}{{ ternary "" "s" (hasSuffix "s" $name) }}
+{{- end }}
+{{- end }}
+{{- if .Values.admissionWebhooks.certManager.enabled }}
+{{- if not .Values.admissionWebhooks.certManager.issuer }}
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ template "vm-operator.fullname" . }}-root
+  namespace: {{ .Release.Namespace }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "vm-operator.fullname" . }}-root-ca
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ template "vm-operator.fullname" . }}-root-ca
+  duration: 63800h0m0s
+  issuerRef:
+    name: {{ template "vm-operator.fullname" . }}-root
+  commonName: "ca.validation.victoriametrics"
+  isCA: true
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ template "vm-operator.fullname" . }}-issuer
+  namespace: {{ .Release.Namespace }}
+spec:
+  ca:
+    secretName: {{ template "vm-operator.fullname" . }}-root-ca
+{{- end }}
+---
+# actual cert part for operator
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ template "vm-operator.fullname" . }}-validation
+  namespace: {{ .Release.Namespace }}
+spec:
+  secretName: {{ template "vm-operator.fullname" . }}-validation
+  duration: 45800h0m0s
+  issuerRef:
+    {{- if .Values.admissionWebhooks.certManager.issuer }}
+    {{- range $k, $v :=  .Values.admissionWebhooks.certManager.issuer }}
+     {{ $k}}: {{ $v}}
+    {{- end }}
+    {{- else }}
+    name: {{ template "vm-operator.fullname" . }}-issuer
+  {{- end }}
+  dnsNames:
+    - {{ template "vm-operator.fullname" . }}
+    - {{ template "vm-operator.fullname" . }}.{{ .Release.Namespace }}
+    - {{ template "vm-operator.fullname" . }}.{{ .Release.Namespace }}.svc
+{{- else }}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "vm-operator.fullname" . }}-validation
+  namespace: {{ .Release.Namespace }}
+  labels: {{ include "vm-operator.labels" . | nindent 4 }}
+type: kubernetes.io/tls
+data:
+  ca.crt: {{ $tls.caCert }}
+  tls.crt: {{ $tls.clientCert }}
+  tls.key: {{ $tls.clientKey }}
+{{- end -}}
+{{- end }}

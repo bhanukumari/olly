@@ -1,0 +1,46 @@
+# apiVersion: operator.victoriametrics.com/v1beta1
+# kind: VMAlertmanagerConfig
+# metadata:
+#   name: vm-prod-alermanager-config
+#   namespace: monitoring
+# spec:
+#   route:
+#     group_wait: 30s
+#     group_interval: 1m
+#     repeat_interval: 15m
+#     receiver: slack-error
+#     group_by:
+#       - job
+#       - alertname
+#       - severity
+#     routes:
+#       - receiver: slack-error
+#         group_wait: 30s
+#         continue: false
+#         matchers:          
+#           - error = https
+#   receivers:
+#     - name: slack-error
+#       slack_configs:
+#         - channel: "#heartbeat-prod-error-500"
+#           api_url:
+#             name: slack-webhook-secret
+#             key: infra_slack_alert_url
+#           send_resolved: true
+#           color: '{{ template "slack.color" . }}'
+#           title: '{{ template "slack.title" . }}'
+#           text: '{{ template "slack.text" . }}'
+#           send_resolved: true
+#           actions:
+#             - type: button
+#               text: 'Runbook :green_book:'
+#               url: '{{ (index .Alerts 0).Annotations.runbook_url }}'
+#             - type: button
+#               text: 'Query :mag:'
+#               url: '{{ (index .Alerts 0).GeneratorURL }}'
+#             - type: button
+#               text: 'Dashboard :chart_with_upwards_trend:'
+#               url: '{{ (index .Alerts 0).Annotations.dashboard_url }}'
+#             - type: button
+#               text: 'Silence :no_bell:'
+#               url: '{{ template "__alert_silence_link" . }}'

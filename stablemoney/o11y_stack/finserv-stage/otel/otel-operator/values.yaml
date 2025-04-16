@@ -1,0 +1,14 @@
+operator:
+  enabled: true
+  fullnameOverride: otel
+  manager:
+    extraArgs:
+      - --enable-go-instrumentation=true
+    collectorImage:
+      repository: otel/opentelemetry-collector-contrib
+      tag: latest
+  admissionWebhooks:
+    certManager:
+      enabled: false
+    autoGenerateCert:
+      enabled: true

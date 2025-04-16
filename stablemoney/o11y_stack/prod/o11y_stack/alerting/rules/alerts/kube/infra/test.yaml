@@ -1,0 +1,26 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: kubernetes-apps-critical-rules-test
+  namespace: monitoring
+spec:
+  groups:
+  - name: kubernetes-apps-demo
+    rules:
+    - alert: Http500ErrorOccurred
+      annotations:
+        description: '500 HTTP errors occurred in the app {{ $labels.app }} in the namespace {{ $labels.namespace }}.'
+        summary: 'A 500 error occurred.'
+        dashboard_url: https://grafana-internal.stablemoney.in/explore
+      expr: |
+         sum(traces_span_metrics_duration_milliseconds_count{http_status_code=~"^5.*"}[5m]) > 0
+      labels:
+        error: https
+    - alert: TestAlert_error
+      expr: vector(1)
+      for: 1m
+      labels:        
+        error: https
+      annotations:
+        summary: "This is a test alert"
+        description: "Generated to verify the alert routing"
