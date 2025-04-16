@@ -14,7 +14,7 @@ Observability helps understand system behavior via logs, metrics, and traces. It
 
 ## Observability Stack (011y) – Prerequisites
 
-![alt text](image-2.png)
+![image](https://github.com/user-attachments/assets/4c70e593-bd6b-4973-aa78-c2458fc32be0)
 
 ![alt text](image-4.png)
 
