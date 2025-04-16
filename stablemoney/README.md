@@ -1,5 +1,6 @@
 ## Introduction
 
+
 Observability helps understand system behavior via logs, metrics, and traces. It's key for reliability and debugging in microservices. This guide covers setting up an observability stack in Kubernetes using modern tools.
 
 
