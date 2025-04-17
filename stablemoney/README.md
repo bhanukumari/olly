@@ -43,7 +43,7 @@ Clone the Repository and navigate to the VictoriaMetrics Directory
 ```
 git clone https://github.com/ot-client/stablemoney/blob/o11y/README.md
 
-cd/home/opstree/stablemoney/o11y_stack/staging/o11y_stack/victoriametrics/
+cd /home/opstree/stablemoney/o11y_stack/staging/o11y_stack/victoriametrics/
 ```
 
 ## Execute Makefile commands one by one with brief explanations.
@@ -54,22 +54,22 @@ cd/home/opstree/stablemoney/o11y_stack/staging/o11y_stack/victoriametrics/
 ```
 - Generates manifests from the vm Helm chart using values.yaml.
 ```
-helm template --name-template=vm vm -n monitoring -f values.yaml
+- helm template --name-template=vm vm -n monitoring -f values.yaml
 ```
 - Applies VictoriaMetrics CRDs to the Kubernetes cluster.
 
 ```
-kubectl apply -f https://raw.githubusercontent.com/VictoriaMetrics/helm-charts/refs/tags/victoria-metrics-k8s-stack-0.25.5/charts/victoria-metrics-k8s-stack/charts/crds/crds/crd.yaml
+- kubectl apply -f https://raw.githubusercontent.com/VictoriaMetrics/helm-charts/refs/tags/victoria-metrics-k8s-stack-0.25.5/charts/victoria-metrics-k8s-stack/charts/crds/crds/crd.yaml
 ```
 
 - Performs a dry-run to create the monitoring namespace and applies it to the cluster.
 ```
-kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+- kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 ```
 - Applie the  Helm chart manifests using values.yaml.
 
 ```
-helm template --name-template=vm vm -n monitoring -f values.yaml | kubectl apply -f -
+- helm template --name-template=vm vm -n monitoring -f values.yaml | kubectl apply -f -
 ```
 ## This image represents a sample Makefile.
 
