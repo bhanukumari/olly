@@ -1,5 +1,6 @@
-## Introduction
+## Getting Started
 
+## Introduction
 
 Observability helps understand system behavior via logs, metrics, and traces. It's key for reliability and debugging in microservices. This guide covers setting up an observability stack in Kubernetes using modern tools.
 
@@ -42,12 +43,38 @@ Clone the Repository and navigate to the VictoriaMetrics Directory
 ```
 git clone https://github.com/ot-client/stablemoney/blob/o11y/README.md
 
-cd VictoriaMetrics
+cd/home/opstree/stablemoney/o11y_stack/staging/o11y_stack/victoriametrics/
 ```
 
-## Open the Makefile and Execute Commands
+## Open the Makefile and Execute Commands One By One.
 
 ![image](https://github.com/user-attachments/assets/a4f8fd81-0428-4058-a0e3-d60b0a6c9e94)
+
+```
+- curl https://github.com/OT-CONTAINER-KIT/helm-charts/releases/download/vm-0.0.3/vm-0.0.3.tgz -O -J -L -s
+```
+- Silently downloads and saves the vm-0.0.3.tgz Helm chart from GitHub.
+
+```
+helm template --name-template=vm vm -n monitoring -f values.yaml
+```
+- Generates manifests from the vm Helm chart using values.yaml.
+
+```
+kubectl apply -f https://raw.githubusercontent.com/VictoriaMetrics/helm-charts/refs/tags/victoria-metrics-k8s-stack-0.25.5/charts/victoria-metrics-k8s-stack/charts/crds/crds/crd.yaml
+```
+- Applies VictoriaMetrics CRDs to the Kubernetes cluster
+
+```
+kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+```
+- Performs a dry-run to create the monitoring namespace and applies it to the cluster.
+
+```
+helm template --name-template=vm vm -n monitoring -f values.yaml | kubectl apply -f -
+```
+- Applie the  Helm chart manifests using values.yaml.
+
 
 ## Verification
 - Switch to the Monitoring Namespace
