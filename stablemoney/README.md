@@ -13,7 +13,7 @@ Observability helps understand system behavior via logs, metrics, and traces. It
 
 - **Traces**: End-to-end request flow across services, revealing latency, bottlenecks, and dependencies.
 
-## Observability Stack (011y) – Prerequisites
+## Prerequisites
 
 ![image](https://github.com/user-attachments/assets/4c70e593-bd6b-4973-aa78-c2458fc32be0)
 
