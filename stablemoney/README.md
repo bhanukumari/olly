@@ -178,7 +178,7 @@ Navigate to Tempo Folder
 
 **This image represents a sample Makefile**
 
-![image](https://github.com/user-attachments/assets/9542f344-5c8d-4bb0-b5a9-1183c7576704)
+![image](https://github.com/user-attachments/assets/8502cbf6-5e6c-42d7-ac08-13356e3b50cf)
 
 
 ## Verification:
