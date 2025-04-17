@@ -152,7 +152,19 @@ kubectl get all -n observability
 
 Navigate to Tempo Folder
 
-**Open the Makefile and Execute Commands**
+**Open the Makefile and Execute Commands One by One**
+
+```
+- curl https://github.com/OT-CONTAINER-KIT/helm-charts/releases/download/otel-operator-1.0.0/otel-operator-1.0.0.tgz -O -J -L
+
+- helm template --name-template=otel otel-operator/ -n observability -f values.yaml
+
+- kubectl create namespace observability --dry-run=client -o yaml | kubectl apply -f -
+
+- helm template --name-template=otel otel-operator/ -n observability -f values.yaml | kubectl apply -f -
+```
+
+**This image represents a sample Makefile**
 
 ![image](https://github.com/user-attachments/assets/9542f344-5c8d-4bb0-b5a9-1183c7576704)
 
