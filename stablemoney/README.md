@@ -96,6 +96,10 @@ This ensures the successful creation of all required resources in the monitoring
 
 Navigate to the Logging Folder
 
+```
+cd /home/opstree/stablemoney/o11y_stack/staging/o11y_stack/logging
+```
+
 **Open the Makefile and Execute Commands One by One**
 
 ```
@@ -133,6 +137,10 @@ kubectl get all -n logging
 
 Navigate to OpenTelemetry Folder
 
+```
+cd /home/opstree/stablemoney/o11y_stack/staging/o11y_stack/otel
+```
+
 **Open the Makefile and Execute Commands One By One**
 
 ```
@@ -167,6 +175,10 @@ kubectl get all -n observability
 4 . **Tempo Setup**
 
 Navigate to Tempo Folder
+
+```
+cd /home/opstree/stablemoney/o11y_stack/staging/o11y_stack/tempo-standalone
+```
 
 **Open the Makefile and Execute Commands One by One**
 
